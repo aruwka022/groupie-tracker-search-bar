@@ -1,0 +1,183 @@
+<!doctype html>
+<html>
+  <head>
+    <title>{{.Title}}</title>
+    <link rel="stylesheet" href="/static/css/style.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  </head>
+  <body>
+    <header class="header">
+      <div class="container">
+        <div class="header-content">
+          <a href="/" class="logo">🎵 Groupie Tracker</a>
+          <a href="/" class="back-button">← Back to All Artists</a>
+        </div>
+      </div>
+    </header>
+
+    <main class="main-content">
+      <div class="container">
+
+        <div class="artist-header">
+          <img src="{{.Artist.Image}}" alt="{{.Artist.Name}}" class="artist-detail-image" />
+          <div class="artist-header-info">
+            <h1 class="artist-detail-name">{{.Artist.Name}}</h1>
+            <div class="artist-stats">
+              <div class="stat-item">
+                <span class="stat-value">{{.Artist.CreationDate}}</span>
+                <span class="stat-label">Founded</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-value">{{len .Artist.Members}}</span>
+                <span class="stat-label">Members</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-value">{{.Artist.FirstAlbum}}</span>
+                <span class="stat-label">First Album</span>
+              </div>
+              {{if .Artist.Locations}}
+              <div class="stat-item">
+                <span class="stat-value">{{len .Artist.Locations}}</span>
+                <span class="stat-label">Locations</span>
+              </div>
+              {{end}}
+            </div>
+          </div>
+        </div>
+
+        <div class="sections-container">
+
+          <div class="collapsible-section">
+            <button class="section-toggle" onclick="toggleSection('members')">
+              <span class="toggle-icon">▶</span>
+              <h2 class="section-title">🎤 Band Members</h2>
+              <span class="section-count">{{len .Artist.Members}}</span>
+            </button>
+            <div class="section-content" id="members-content">
+              <div class="members-grid">
+                {{range .Artist.Members}}
+                <div class="member-item">{{.}}</div>
+                {{else}}
+                <div class="no-data">No member information available</div>
+                {{end}}
+              </div>
+            </div>
+          </div>
+
+          {{if .Artist.Locations}}
+          <div class="collapsible-section">
+            <button class="section-toggle" onclick="toggleSection('locations')">
+              <span class="toggle-icon">▶</span>
+              <h2 class="section-title">📍 Concert Locations</h2>
+              <span class="section-count">{{len .Artist.Locations}}</span>
+            </button>
+            <div class="section-content" id="locations-content">
+              <div class="locations-list">
+                {{range .Artist.Locations}}
+                <div class="location-item">{{.}}</div>
+                {{end}}
+              </div>
+            </div>
+          </div>
+          {{end}}
+
+          {{if .Artist.ConcertDates}}
+          <div class="collapsible-section">
+            <button class="section-toggle" onclick="toggleSection('dates')">
+              <span class="toggle-icon">▶</span>
+              <h2 class="section-title">📅 Concert Dates</h2>
+              <span class="section-count">{{len .Artist.ConcertDates}}</span>
+            </button>
+            <div class="section-content" id="dates-content">
+              <div class="dates-list">
+                {{range .Artist.ConcertDates}}
+                <div class="date-item">{{.}}</div>
+                {{end}}
+              </div>
+            </div>
+          </div>
+          {{end}}
+
+          {{if .Artist.Relations}}
+          <div class="collapsible-section">
+            <button class="section-toggle" onclick="toggleSection('relations')">
+              <span class="toggle-icon">▶</span>
+              <h2 class="section-title">🎫 Tour Schedule</h2>
+              <span class="section-count">{{len .Artist.Relations}}</span>
+            </button>
+            <div class="section-content" id="relations-content">
+              <div class="relations-table-container">
+                <table class="relations-table">
+                  <thead>
+                    <tr>
+                      <th>Location</th>
+                      <th>Dates</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {{range .Artist.Relations}}
+                    <tr>
+                      <td><strong>{{.Location}}</strong></td>
+                      <td>
+                        {{range .Dates}}
+                        <div class="date-item">{{.}}</div>
+                        {{end}}
+                      </td>
+                    </tr>
+                    {{end}}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          {{end}}
+
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="container">
+        <p>🎶 Groupie Tracker - Explore Music History</p>
+      </div>
+    </footer>
+
+    <script>
+      function toggleSection(sectionId) {
+        const content = document.getElementById(sectionId + "-content");
+        const toggleIcon = content.previousElementSibling.querySelector(".toggle-icon");
+        if (content.style.display === "block") {
+          content.style.display = "none";
+          toggleIcon.textContent = "▶";
+          content.previousElementSibling.classList.remove("active");
+        } else {
+          content.style.display = "block";
+          toggleIcon.textContent = "▼";
+          content.previousElementSibling.classList.add("active");
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const firstSection = document.querySelector(".collapsible-section");
+        if (firstSection) {
+          const firstContent = firstSection.querySelector(".section-content");
+          const firstToggle = firstSection.querySelector(".toggle-icon");
+          firstContent.style.display = "block";
+          firstToggle.textContent = "▼";
+          firstSection.querySelector(".section-toggle").classList.add("active");
+        }
+      });
+
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Enter" || e.key === " ") {
+          const focused = document.activeElement;
+          if (focused.classList.contains("section-toggle")) {
+            e.preventDefault();
+            const sectionId = focused.getAttribute("onclick").match(/'([^']+)'/)[1];
+            toggleSection(sectionId);
+          }
+        }
+      });
+    </script>
+  </body>
+</html>

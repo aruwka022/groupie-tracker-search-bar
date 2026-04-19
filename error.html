@@ -1,0 +1,61 @@
+<!doctype html>
+<html>
+  <head>
+    <title>{{.Title}}</title>
+    <link rel="stylesheet" href="/static/css/style.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  </head>
+  <body>
+    <header class="header">
+      <div class="container">
+        <div class="header-content">
+          <a href="/" class="logo">🎵 Groupie Tracker</a>
+          <a href="/" class="back-button">← Back to Safety</a>
+        </div>
+      </div>
+    </header>
+
+    <main class="main-content">
+      <div class="container">
+        <div class="error-hero">
+          <div class="error-illustration">
+            <div class="error-icon">🎵</div>
+            <div class="error-emoji">😵</div>
+          </div>
+          <div class="error-content">
+            <div class="error-code">{{.Code}}</div>
+            <h1 class="error-title">{{.Title}}</h1>
+            <p class="error-message">{{.Message}}</p>
+            <div class="error-actions">
+              <a href="/" class="error-button primary">
+                <span class="button-icon">🏠</span>
+                Back to Home
+              </a>
+              <button onclick="history.back()" class="error-button secondary">
+                <span class="button-icon">↶</span>
+                Go Back
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="container">
+        <p>🎶 Groupie Tracker - Even errors sound good here</p>
+      </div>
+    </footer>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const errorIcon = document.querySelector(".error-icon");
+        let rotation = 0;
+        setInterval(function () {
+          rotation = (rotation + 1) % 360;
+          errorIcon.style.transform = "rotate(" + rotation + "deg)";
+        }, 50);
+      });
+    </script>
+  </body>
+</html>
